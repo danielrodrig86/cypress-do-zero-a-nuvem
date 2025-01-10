@@ -68,6 +68,15 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('.error').closest('.error')
 
   })
+  it('Exercício extra 3 - telefone com valor não-numérico digitado', () => {
+    cy.get('#phone')
+    .as('phone')
+    .should('be.visible')
+    .type('abc')
+
+    cy.get('#phone')
+    .should('have.value', '')
+  })
   it('Exercício extra 4 - exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
 
     cy.get('#firstName')
@@ -154,7 +163,7 @@ describe('Central de Atendimento ao Cliente TAT', () => {
 
     cy.get('.button').click()
 
-    cy.wait(3500)
+    cy.wait(3000)
 
     cy.get('#firstName')
     .as('firstName')
@@ -179,14 +188,23 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.get('.error').closest('.error')
 
   })
-  it('Exercício extra 3 - telefone com valor não-numérico digitado', () => {
+  it('Exercício extra 8 - outra forma de identificar elementos', () => {
+    cy.contains('Nome')
+    .type('daniel')
+
+    cy.contains('Sobrenome')
+    .type('rodrigues')
+
+    cy.contains('E-mail')
+    .type('daniel@teste.com.br')
+
+    cy.contains('Como podemos te ajudar?')
+    .type('teste texto')
+
+    cy.contains('Enviar').click()
 
   })
   it('Exercício extra 7 - envia o formuário com sucesso usando um comando customizado', () => {
 
   })
-  it('Exercício extra 8 - outra forma de identificar elementos', () => {
-
-  })
-  
 })
