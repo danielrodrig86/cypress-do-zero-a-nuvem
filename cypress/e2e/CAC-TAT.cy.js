@@ -112,4 +112,68 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.contains('button','Enviar').click()
 
   })
+  it('Aula 3 - seleciona um produto por seu texto', () => {
+
+//    cy.fillMandatoryFieldsAndSubmit()
+    cy.get('select').select('YouTube')
+    .should('have.value','youtube')
+
+    cy.get('select').select('Mentoria')
+    .should('have.value','mentoria')
+
+    cy.get('select').select('Blog')
+    .should('have.value','blog')
+
+    cy.get('select').select('Cursos')
+    .should('have.value','cursos')
+
+//    cy.contains('button','Enviar').click()
+  })
+  it('Aula 4 - marca o tipo de atendimento pre selecionado', () => {
+
+    cy.get('input[type="radio"]').should('be.checked').and('have.value', 'ajuda')
+    
+  })
+  it('Aula 4 - marca o tipo de atendimento', () => {
+
+    cy.get('input[type="radio"]').check('feedback')
+    .should('have.value', 'feedback')
+
+    cy.get('input[type="radio"]').check('elogio')
+    .should('have.value', 'elogio')
+
+    cy.get('input[type="radio"]').check('ajuda')
+    .should('have.value', 'ajuda')
+    
+  })
+  it('Aula 5 - marca ambos checkboxes, depois desmarca o último', () => {
+
+    cy.fillMandatoryFieldsAndSubmit()
+    cy.get('#email-checkbox').as('email-checkbox').check()
+    cy.get('#phone-checkbox').as('phone-checkbox').check()
+
+    cy.get('#phone-checkbox').uncheck().last()
+
+    cy.contains('button','Enviar').click()
+
+    cy.get('.success').should('be.visible')
+  })
+  it('Aula 5 - exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
+
+    cy.fillMandatoryFieldsAndSubmit()
+    cy.get('#email-checkbox').as('email-checkbox').click()
+    cy.get('#phone-checkbox').as('phone-checkbox').click()
+
+    cy.contains('button','Enviar').click()
+
+    cy.get('.error').should('be.visible')
+  })
+  it.only('Aula 6 - seleciona um arquivo da pasta fixtures', () => {
+
+    cy.fillMandatoryFieldsAndSubmit()
+
+    cy.get('input[type="file"]').selectFile('cypress/fixtures/example.json')
+
+    cy.get('.success').should('be.visible')
+  })
 })
