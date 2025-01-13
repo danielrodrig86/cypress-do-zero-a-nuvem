@@ -112,68 +112,117 @@ describe('Central de Atendimento ao Cliente TAT', () => {
     cy.contains('button','Enviar').click()
 
   })
-  it('Aula 3 - seleciona um produto por seu texto', () => {
-
-//    cy.fillMandatoryFieldsAndSubmit()
-    cy.get('select').select('YouTube')
+  it('Aula 3 - seleciona um produto (YouTube) por seu texto', () => {
+    cy.get('#product').select('YouTube')
     .should('have.value','youtube')
-
-    cy.get('select').select('Mentoria')
-    .should('have.value','mentoria')
-
-    cy.get('select').select('Blog')
-    .should('have.value','blog')
-
-    cy.get('select').select('Cursos')
-    .should('have.value','cursos')
-
-//    cy.contains('button','Enviar').click()
   })
-  it('Aula 4 - marca o tipo de atendimento pre selecionado', () => {
-
-    cy.get('input[type="radio"]').should('be.checked').and('have.value', 'ajuda')
-    
+    it('Aula 3.1 - seleciona um produto (Mentoria) por seu valor (value)', () => {
+    cy.get('#product').select('mentoria')
+    .should('have.value','mentoria')
+  })
+  it('Aula 3.2 - seleciona um produto (Blog) por seu índice', () => {
+    cy.get('#product').select(1)
+    .should('have.value','blog')
+  })  
+  it('Aula 3.3 - seleciona um produto (Cursos) por seu texto', () => {
+    cy.get('#product').select('Cursos')
+    .should('have.value','cursos')
   })
   it('Aula 4 - marca o tipo de atendimento', () => {
 
-    cy.get('input[type="radio"]').check('feedback')
-    .should('have.value', 'feedback')
+    cy.get('input[type="radio"][value="feedback"]').check()
+    .should('be.checked')
 
-    cy.get('input[type="radio"]').check('elogio')
+    cy.get('input[type="radio"][value="elogio"]').check()
     .should('have.value', 'elogio')
 
+    cy.get('input[type="radio"]').check('feedback')
+    .should('be.checked')
+    
     cy.get('input[type="radio"]').check('ajuda')
     .should('have.value', 'ajuda')
     
   })
+  it('Aula 4.1 - marca todos os tipos radio', () => {
+
+    cy.get('input[type="radio"]')
+    .each(typeOfService => {
+      cy.wrap(typeOfService)
+      .check()
+      .should('be.checked')
+    })
+
+  })
+  it('Aula 4.2 - marca o tipo de atendimento pre selecionado', () => {
+
+    cy.get('input[type="radio"]').should('be.checked').and('have.value', 'ajuda')
+    
+  })
   it('Aula 5 - marca ambos checkboxes, depois desmarca o último', () => {
 
-    cy.fillMandatoryFieldsAndSubmit()
-    cy.get('#email-checkbox').as('email-checkbox').check()
-    cy.get('#phone-checkbox').as('phone-checkbox').check()
+    cy.get('input[type="checkbox"]')
+    .check()
+    .should('be.checked')
+    .last()
+    .uncheck()
+    .should('not.be.checked')
 
-    cy.get('#phone-checkbox').uncheck().last()
+//    cy.fillMandatoryFieldsAndSubmit()
+//    cy.get('#email-checkbox').as('email-checkbox').check()
+//    cy.get('#phone-checkbox').as('phone-checkbox').check()
+//    cy.get('#phone-checkbox').uncheck().last()
+//    cy.contains('button','Enviar').click()
+//    cy.get('.success').should('be.visible')
 
-    cy.contains('button','Enviar').click()
-
-    cy.get('.success').should('be.visible')
   })
-  it('Aula 5 - exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
+  it('Aula 5.1 - exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', () => {
 
     cy.fillMandatoryFieldsAndSubmit()
-    cy.get('#email-checkbox').as('email-checkbox').click()
-    cy.get('#phone-checkbox').as('phone-checkbox').click()
+    cy.get('#phone-checkbox').as('phone-checkbox').check()
 
     cy.contains('button','Enviar').click()
 
     cy.get('.error').should('be.visible')
   })
-  it.only('Aula 6 - seleciona um arquivo da pasta fixtures', () => {
+  it('Aula 6 - seleciona um arquivo da pasta fixtures', () => {
 
-    cy.fillMandatoryFieldsAndSubmit()
+    cy.get('#file-upload')
+      .selectFile('cypress/fixtures/example.json')
+      .then(input => {
+        expect(input[0].files[0].name).to.equal('example.json')
+    })
 
-    cy.get('input[type="file"]').selectFile('cypress/fixtures/example.json')
+  })
+  it('Aula 6.1 - seleciona um arquivo simulando um drag-and-drop', () => {
 
-    cy.get('.success').should('be.visible')
+    cy.get('input[type="file"]')
+      .selectFile('cypress/fixtures/example.json',{action: 'drag-drop'})
+      .then(input => {
+        expect(input[0].files[0].name).to.equal('example.json')
+    })
+
+  })
+  it('Aula 6.2 - seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', () => {
+
+    cy.fixture('example.json').as('exampleFile')
+    cy.get('#file-upload')
+      .selectFile('@exampleFile')
+      .then(input => {
+       expect(input[0].files[0].name).to.equal('example.json')
+     })
+
+  })
+
+  it('Aula 7 - verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', () => {
+    cy.contains('a','Política de Privacidade')
+      .should('have.attr','href','privacy.html')
+      .and('have.attr', 'target', '_blank')
+  })
+  it('Aula 7.1 - acessa a página da política de privacidade removendo o target e então clicando no link', () => {
+    cy.contains('a','Política de Privacidade')
+      .invoke('removeAttr', 'target')
+      .click()
+
+    cy.contains('h1','CAC TAT - Política de Privacidade').should('be.visible')
   })
 })
