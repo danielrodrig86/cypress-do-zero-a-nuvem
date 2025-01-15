@@ -20,7 +20,7 @@ document.querySelector('button[type="submit"]')
     const firstNameField = document.getElementById('firstName')
     const lastNameField = document.getElementById('lastName')
     const emailField = document.getElementById('email')
-    const textareaField = document.getElementById('open-text-area'
+    const textareaField = document.getElementById('open-text-area')
     const productField = document.getElementById('product')
     const helpRadio = document.querySelector('input[value="ajuda"]')
     const emailCheckbox = document.getElementById('email-checkbox')
